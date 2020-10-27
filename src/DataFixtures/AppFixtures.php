@@ -12,7 +12,7 @@ class AppFixtures extends Fixture
     {
         for ($i = 0; $i < 20; $i++) {
             $product = new Product();
-            $product->setName('product '.$i);
+            $product->setName('product ' . $i);
             $manager->persist($product);
         }
 
