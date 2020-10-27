@@ -52,6 +52,8 @@ jobs:
 
       - name: Run functional tests
         run: php vendor/bin/simple-phpunit
+        env:
+          DATABASE_URL: mysql://root:password@127.0.0.1:${{ job.services.mysql.ports['3306'] }}/symfony
 
       - name: Analyze coding style
         run: php vendor/bin/phpcs
