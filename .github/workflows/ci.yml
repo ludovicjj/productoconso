@@ -8,6 +8,13 @@ jobs:
       matrix:
         operating-systeme: [ ubuntu-latest ]
         php-versions: [ 7.3 ]
+    services:
+      mysql:
+        image: mysql:8.0
+      env:
+        MYSQL_ROOT_PASSWORD: 'password'
+      ports:
+        - 3306:3306
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -32,6 +39,10 @@ jobs:
 
       - name: Install Composer dependencies
         run: composer install --no-progress --prefer-dist --optimize-autoloader
+
+      - name: Prepare database
+        run: |
+          php bin/console doctrine:database:create
 
       - name: Run functional tests
         run: php vendor/bin/simple-phpunit
