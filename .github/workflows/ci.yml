@@ -31,7 +31,7 @@ jobs:
           coverage: none
 
       - name: Start mysql service
-          run: sudo /etc/init.d/mysql start
+        run: sudo /etc/init.d/mysql start
 
       - name: Get composer cache directory
         id: composer-cache
