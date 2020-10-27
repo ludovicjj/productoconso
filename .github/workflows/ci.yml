@@ -42,13 +42,8 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-progress --prefer-dist --optimize-autoloader
 
-      - name: Verify MySQL connection
-        env:
-          PORT: ${{ job.services.mysql.ports[3306] }}
-        run: |
-          while ! mysqladmin ping -h"127.0.0.1" -P"$PORT" --silent; do
-            sleep 1
-          done
+      - name: Create database
+        run: php bin/console doctrine:database:create
 
       - name: Run functional tests
         run: php vendor/bin/simple-phpunit
