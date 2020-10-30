@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\UuidInterface;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use App\Repository\UserRepository;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Class User
@@ -18,7 +19,7 @@ use App\Repository\UserRepository;
  *
  * https://www.doctrine-project.org/projects/doctrine-orm/en/2.7/reference/inheritance-mapping.html
  */
-abstract class User
+abstract class User implements UserInterface
 {
     /**
      * @var UuidInterface $id
@@ -183,6 +184,10 @@ abstract class User
     }
 
     public function getSalt(): void
+    {
+    }
+
+    public function eraseCredentials()
     {
     }
 }
