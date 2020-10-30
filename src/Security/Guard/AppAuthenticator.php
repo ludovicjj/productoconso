@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -44,7 +44,7 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator implements Passwor
     private $entityManager;
 
     /**
-     * @var PasswordEncoderInterface $passwordEncoder
+     * @var UserPasswordEncoderInterface  $passwordEncoder
      */
     private $passwordEncoder;
 
@@ -53,13 +53,13 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator implements Passwor
      * @param UrlGeneratorInterface $urlGenerator
      * @param CsrfTokenManagerInterface $csrfTokenManager
      * @param EntityManagerInterface $entityManager
-     * @param PasswordEncoderInterface $passwordEncoder
+     * @param UserPasswordEncoderInterface  $passwordEncoder
      */
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
         CsrfTokenManagerInterface $csrfTokenManager,
         EntityManagerInterface $entityManager,
-        PasswordEncoderInterface $passwordEncoder
+        UserPasswordEncoderInterface  $passwordEncoder
     ) {
         $this->urlGenerator = $urlGenerator;
         $this->csrfTokenManager = $csrfTokenManager;
