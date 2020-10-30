@@ -26,7 +26,7 @@ use Symfony\Component\Security\Core\Security;
  */
 class AppAuthenticator extends AbstractFormLoginAuthenticator implements PasswordAuthenticatedInterface
 {
-    public const LOGIN_ROUTE = 'login';
+    public const LOGIN_ROUTE = 'security_login';
 
     /**
      * @var UrlGeneratorInterface $urlGenerator
