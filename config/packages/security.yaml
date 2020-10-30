@@ -20,6 +20,7 @@ security:
                     - App\Security\Guard\AppAuthenticator
             logout:
                 path: security_logout
+                target: home
     role_hierarchy:
         ROLE_PRODUCER: [ ROLE_USER ]
         ROLE_CUSTOMER: [ ROLE_USER ]
