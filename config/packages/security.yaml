@@ -1,6 +1,6 @@
 security:
     encoders:
-        App\ENity\User:
+        App\Entity\User:
             algorithm: auto
     providers:
         users_in_database:
