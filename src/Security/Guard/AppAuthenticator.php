@@ -59,7 +59,7 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator implements Passwor
         UrlGeneratorInterface $urlGenerator,
         CsrfTokenManagerInterface $csrfTokenManager,
         EntityManagerInterface $entityManager,
-        UserPasswordEncoderInterface  $passwordEncoder
+        UserPasswordEncoderInterface $passwordEncoder
     ) {
         $this->urlGenerator = $urlGenerator;
         $this->csrfTokenManager = $csrfTokenManager;
