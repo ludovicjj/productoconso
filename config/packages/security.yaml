@@ -1,7 +1,12 @@
 security:
-    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    encoders:
+        App\ENity\User:
+            algorithm: auto
     providers:
-        users_in_memory: { memory: null }
+        users_in_database:
+            entity:
+                class: App\Entity\User
+                property: email
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -9,7 +14,15 @@ security:
         main:
             anonymous: true
             lazy: true
-            provider: users_in_memory
+            provider: users_in_database
+            guard:
+                authenticators:
+                    - App\Security\Guard\AppAuthenticator
+            logout:
+                path: security_logout
+    role_hierarchy:
+        ROLE_PRODUCER: [ ROLE_USER ]
+        ROLE_CUSTOMER: [ ROLE_USER ]
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
