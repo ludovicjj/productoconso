@@ -31,7 +31,7 @@ class SecurityController
     }
 
     /**
-     * @Route("/login", name="login")
+     * @Route("/login", name="security_login")
      *
      * @param AuthenticationUtils $authenticationUtils
      * @return Response
