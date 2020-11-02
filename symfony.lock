@@ -144,6 +144,9 @@
             "./phpcs.xml.dist"
         ]
     },
+    "symfony/browser-kit": {
+        "version": "v5.1.8"
+    },
     "symfony/cache": {
         "version": "v5.1.7"
     },
@@ -165,6 +168,9 @@
             "./bin/console"
         ]
     },
+    "symfony/css-selector": {
+        "version": "v5.1.8"
+    },
     "symfony/dependency-injection": {
         "version": "v5.1.7"
     },
@@ -173,6 +179,9 @@
     },
     "symfony/doctrine-bridge": {
         "version": "v5.1.7"
+    },
+    "symfony/dom-crawler": {
+        "version": "v5.1.8"
     },
     "symfony/dotenv": {
         "version": "v5.1.7"
