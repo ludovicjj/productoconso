@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\EndToEnd;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -9,19 +9,21 @@ use Symfony\Component\Routing\RouterInterface;
 
 class LoginTest extends WebTestCase
 {
+    use EndToEndIntegrationTestTrait;
+
     public function testLoginSuccess(): void
     {
-        $client = static::createClient();
+        $this->loadFixture(__DIR__ . "/../fixtures/CreateUser.yml");
 
         /** @var RouterInterface $router */
-        $router = $client->getContainer()->get("router");
+        $router = $this->client->getContainer()->get("router");
 
-        $crawler = $client->request(Request::METHOD_GET, $router->generate("security_login"));
+        $crawler = $this->client->request(Request::METHOD_GET, $router->generate("security_login"));
         $form = $crawler->filter("form[name=login_form]")->form([
             "email" => "johndoe@email.fr",
             "password" => "123456"
         ]);
-        $client->submit($form);
+        $this->client->submit($form);
         $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
         $this->assertResponseRedirects('/');
     }
@@ -29,6 +31,7 @@ class LoginTest extends WebTestCase
     public function testLoginInvalidEmail(): void
     {
         $client = static::createClient();
+        $this->loadFixture(__DIR__ . "/../fixtures/CreateUser.yml");
 
         /** @var RouterInterface $router */
         $router = $client->getContainer()->get("router");
@@ -48,6 +51,7 @@ class LoginTest extends WebTestCase
     public function testLoginInvalidPassword(): void
     {
         $client = static::createClient();
+        $this->loadFixture(__DIR__ . "/../fixtures/CreateUser.yml");
 
         /** @var RouterInterface $router */
         $router = $client->getContainer()->get("router");
