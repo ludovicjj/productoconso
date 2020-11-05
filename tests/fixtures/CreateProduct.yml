@@ -1,0 +1,5 @@
+App\Entity\Product:
+  product1:
+    name: "my first product"
+  product2:
+    name: "my second product"

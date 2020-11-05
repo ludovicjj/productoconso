@@ -1,0 +1,6 @@
+App\Entity\Producer:
+  producer1:
+    firstName: "john"
+    lastName: "doe"
+    email: "johndoe@email.fr"
+    password: "\\$2y\\$10\\$OdX90bl.mvnRz.LA9Q4e.unpRgcZLizaAybzCY7DFQscDJ1DWo4R2" # bcrypt('123456')
