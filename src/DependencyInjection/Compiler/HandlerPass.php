@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\DependencyInjection\Compiler;
 
 use App\HandlerFactory\HandlerFactory;

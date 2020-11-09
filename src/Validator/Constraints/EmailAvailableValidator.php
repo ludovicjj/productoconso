@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Validator\Constraints;
 
 use App\DTO\RegistrationDTO;
@@ -41,7 +40,7 @@ class EmailAvailableValidator extends ConstraintValidator
 
     private function isValidEmail(RegistrationDTO $DTO): bool
     {
-        $user = $this->userRepository->findOneBy(['email'=> $DTO->email]);
+        $user = $this->userRepository->findOneBy(['email' => $DTO->email]);
 
         return is_null($user);
     }
