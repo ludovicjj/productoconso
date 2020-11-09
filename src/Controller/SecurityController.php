@@ -2,6 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Customer;
+use App\Entity\Producer;
+use App\Handler\RegistrationHandler;
+use App\HandlerFactory\HandlerFactoryInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -22,12 +28,22 @@ class SecurityController
     private $twig;
 
     /**
+     * @var HandlerFactoryInterface $handlerFactory
+     */
+    private $handlerFactory;
+
+
+    /**
      * SecurityController constructor.
      * @param Environment $twig
+     * @param HandlerFactoryInterface $handlerFactory
      */
-    public function __construct(Environment $twig)
-    {
+    public function __construct(
+        Environment $twig,
+        HandlerFactoryInterface $handlerFactory
+    ) {
         $this->twig = $twig;
+        $this->handlerFactory = $handlerFactory;
     }
 
     /**
@@ -52,6 +68,38 @@ class SecurityController
                 'error' => $error,
                 'last_username' => $lastUsername
             ])
+        );
+    }
+
+    /**
+     * @Route("/registration/{role}", name="security_registration")
+     *
+     * @param Request $request
+     * @return Response
+     *
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function registration(Request $request): Response
+    {
+        $role = $request->attributes->get('role');
+        $user = Producer::ROLE === $role ? new Producer() : new Customer();
+
+        /** @var RegistrationHandler $handler */
+        $handler = $this->handlerFactory->createHandler(RegistrationHandler::class);
+
+        if ($handler->handle($request, $user)) {
+            return new RedirectResponse("/");
+        }
+
+        return new Response(
+            $this->twig->render(
+                "ui/security/registration.html.twig",
+                [
+                    'form' => $handler->createView(),
+                ]
+            )
         );
     }
 }
