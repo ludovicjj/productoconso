@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraint;
 class EmailAvailable extends Constraint
 {
     /** @var string $message */
-    public $message = "Cette adresse email est déjà utilisé";
+    public $message = "Cette adresse email est déjà utilisé.";
 
     public function getTargets()
     {
