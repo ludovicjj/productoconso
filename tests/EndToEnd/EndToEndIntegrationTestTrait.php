@@ -6,9 +6,13 @@ use Doctrine\Common\DataFixtures\Purger\ORMPurger as DoctrineOrmPurger;
 use Fidry\AliceDataFixtures\Bridge\Doctrine\Persister\ObjectManagerPersister;
 use Fidry\AliceDataFixtures\Loader\PersisterLoader;
 use Psr\Log\NullLogger;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 trait EndToEndIntegrationTestTrait
 {
+    /**
+     * @var KernelBrowser $client
+     */
     public $client;
 
     /**
