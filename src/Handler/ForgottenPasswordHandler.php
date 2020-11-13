@@ -33,7 +33,7 @@ class ForgottenPasswordHandler extends AbstractHandler
     private $entityManager;
 
     public function __construct(
-        FormFactoryInterface  $formFactory,
+        FormFactoryInterface $formFactory,
         UserRepository $userRepository,
         MailerInterface $mailer,
         SessionInterface $session,
