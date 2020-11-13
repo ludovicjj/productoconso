@@ -102,4 +102,19 @@ class SecurityController
             )
         );
     }
+
+    /**
+     * @param Request $request
+     * @return Response
+     *
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function forgottenPassword(Request $request): Response
+    {
+        return new Response(
+            $this->twig->render('ui/security/forgotten_password.html.twig')
+        );
+    }
 }
