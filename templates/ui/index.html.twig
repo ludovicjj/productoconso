@@ -2,11 +2,4 @@
 
 {% block body %}
     <h1>Welcome to home page</h1>
-
-    {# read and display just one flash message type #}
-    {% for message in app.flashes('success') %}
-        <div class="flash-success">
-            {{ message }}
-        </div>
-    {% endfor %}
 {% endblock %}

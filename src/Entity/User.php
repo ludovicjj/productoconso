@@ -66,6 +66,12 @@ abstract class User implements UserInterface
      */
     protected $registerAt;
 
+    /**
+     * @var null|ForgottenPassword $forgottenPassword
+     * @ORM\Embedded(class="ForgottenPassword")
+     */
+    protected $forgottenPassword;
+
     public function __construct()
     {
         $this->registerAt = new DateTimeImmutable();
@@ -181,6 +187,19 @@ abstract class User implements UserInterface
     public function getUsername(): string
     {
         return $this->email;
+    }
+
+    /**
+     * @return ForgottenPassword|null
+     */
+    public function getForgottenPassword(): ?ForgottenPassword
+    {
+        return $this->forgottenPassword;
+    }
+
+    public function hasForgottenPassword(): void
+    {
+        $this->forgottenPassword = new ForgottenPassword();
     }
 
     public function getSalt(): void

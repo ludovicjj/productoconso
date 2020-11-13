@@ -16,10 +16,17 @@ abstract class AbstractHandler implements HandlerInterface
     private $form;
 
     /**
+     * @var null|object $entity
+     */
+    private $entity;
+
+    /**
      * @inheritDoc
      */
-    public function handle(Request $request, object $entity, $data = null, array $options = []): bool
+    public function handle(Request $request, ?object $entity = null, $data = null, array $options = []): bool
     {
+        $this->entity = $entity;
+
         $resolver = new OptionsResolver();
         $resolver->setRequired("form_type");
         $resolver->setRequired("form_options");
@@ -35,7 +42,7 @@ abstract class AbstractHandler implements HandlerInterface
 
 
         if ($this->form->isSubmitted() && $this->form->isValid()) {
-            $this->process($this->form, $entity);
+            $this->process($this->form);
             return true;
         }
         return false;
@@ -46,10 +53,21 @@ abstract class AbstractHandler implements HandlerInterface
     }
 
     abstract public function getFormFactory(): FormFactoryInterface;
-    abstract public function process(FormInterface $form, object $entity): void;
+    abstract public function process(FormInterface $form): void;
 
+    /**
+     * @return FormView
+     */
     public function createView(): FormView
     {
         return $this->form->createView();
+    }
+
+    /**
+     * @return object|null
+     */
+    protected function getEntity(): ?object
+    {
+        return $this->entity;
     }
 }

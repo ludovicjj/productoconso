@@ -13,6 +13,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class RegistrationHandler extends AbstractHandler
 {
@@ -63,22 +64,25 @@ class RegistrationHandler extends AbstractHandler
         ]);
     }
 
-    public function process(FormInterface $form, object $entity): void
+    public function process(FormInterface $form): void
     {
         /** @var RegistrationDTO $registrationDTO */
         $registrationDTO = $form->getData();
 
-        /** @var Producer|Customer $user */
-        $user = $entity;
+        $entity = $this->getEntity();
 
-        $user->setFirstName($registrationDTO->firstName);
-        $user->setLastName($registrationDTO->lastName);
-        $user->setEmail($registrationDTO->email);
-        $user->setPassword($this->passwordEncoder->encodePassword($user, $registrationDTO->plainPassword));
+        if ($entity !== null && $entity instanceof UserInterface) {
+            /** @var Producer|Customer $user */
+            $user = $this->getEntity();
+            $user->setFirstName($registrationDTO->firstName);
+            $user->setLastName($registrationDTO->lastName);
+            $user->setEmail($registrationDTO->email);
+            $user->setPassword($this->passwordEncoder->encodePassword($user, $registrationDTO->plainPassword));
 
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
-        $this->session->getFlashBag()->add('success', "Votre inscription a été effectuée avec succès.");
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+            $this->session->getFlashBag()->add('success', "Votre inscription a été effectuée avec succès.");
+        }
     }
 
     public function getFormFactory(): FormFactoryInterface

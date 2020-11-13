@@ -8,11 +8,11 @@ interface HandlerInterface
 {
     /**
      * @param Request $request
-     * @param object $entity
+     * @param null|object $entity
      * @param null $data
      * @param array $options
      *
      * @return bool
      */
-    public function handle(Request $request, object $entity, $data = null, array $options = []): bool;
+    public function handle(Request $request, ?object $entity = null, $data = null, array $options = []): bool;
 }
