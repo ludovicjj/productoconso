@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Customer;
 use App\Entity\Producer;
+use App\Handler\ForgottenPasswordHandler;
 use App\Handler\RegistrationHandler;
 use App\HandlerFactory\HandlerFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -104,6 +105,7 @@ class SecurityController
     }
 
     /**
+     * @Route("/forgotten-password", name="security_forgotten_password")
      * @param Request $request
      * @return Response
      *
@@ -113,8 +115,27 @@ class SecurityController
      */
     public function forgottenPassword(Request $request): Response
     {
+        /** @var ForgottenPasswordHandler $handler */
+        $handler = $this->handlerFactory->createHandler(ForgottenPasswordHandler::class);
+
+        if ($handler->handle($request)) {
+            return new RedirectResponse("/login");
+        }
+
         return new Response(
-            $this->twig->render('ui/security/forgotten_password.html.twig')
+            $this->twig->render(
+                'ui/security/forgotten_password.html.twig',
+                [
+                    'form' => $handler->createView()
+                ]
+            )
         );
+    }
+
+    /**
+     * @Route("/reset-password/{token}", name="security_reset_password")
+     */
+    public function resetPassword()
+    {
     }
 }
