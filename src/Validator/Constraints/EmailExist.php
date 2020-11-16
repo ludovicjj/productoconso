@@ -11,5 +11,5 @@ use Symfony\Component\Validator\Constraint;
  */
 class EmailExist extends Constraint
 {
-    public $message = "Cette adresse email n'existe pas";
+    public $message = "Cette adresse email n'existe pas.";
 }
