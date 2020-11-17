@@ -165,7 +165,8 @@ class SecurityController
     {
         $token = $request->attributes->get('token');
 
-        if (!Uuid::isValid($token)
+        if (
+            !Uuid::isValid($token)
             || null === ($user = $this->userRepository->findUserByForgottenPasswordToken(Uuid::fromString($token)))
         ) {
             $this->session->getFlashBag()->add(
