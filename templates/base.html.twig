@@ -7,11 +7,13 @@
     </head>
     <body>
 
-    {# read and display just one flash message type #}
-    {% for message in app.flashes('success') %}
-        <div class="flash-success">
-            {{ message }}
-        </div>
+    {# read and display several types of flash messages #}
+    {% for label, messages in app.flashes(['success', 'danger']) %}
+        {% for message in messages %}
+            <div class="flash-{{ label }}">
+                {{ message }}
+            </div>
+        {% endfor %}
     {% endfor %}
 
         {% block body %}{% endblock %}
