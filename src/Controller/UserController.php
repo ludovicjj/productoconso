@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Handler\EditUserInfoHandler;
+use App\Handler\EditUserPasswordHandler;
 use App\HandlerFactory\HandlerFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -91,6 +92,37 @@ class UserController
         if ($handler->handle($request, $user)) {
             return new RedirectResponse(
                 $this->urlGenerator->generate("user_edit_info")
+            );
+        }
+
+        return new Response(
+            $this->twig->render("ui/user/edit_info.html.twig", [
+                'form' => $handler->createView()
+            ])
+        );
+    }
+
+    /**
+     * @Route("/edit-password", name="user_edit_password")
+     * @param Request $request
+     * @return Response
+     *
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function editUserPassword(Request $request): Response
+    {
+        if (!$this->security->isGranted('ROLE_USER')) {
+            $this->session->getFlashBag()->add("danger", "Vous devez vous connecter pour accéder à cette page");
+            throw new AccessDeniedException();
+        }
+
+        $handler = $this->handlerFactory->createHandler(EditUserPasswordHandler::class);
+
+        if ($handler->handle($request, $this->security->getUser())) {
+            return new RedirectResponse(
+                $this->urlGenerator->generate("security_login")
             );
         }
 
