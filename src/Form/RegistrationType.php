@@ -3,13 +3,15 @@
 namespace App\Form;
 
 use App\DTO\RegistrationDTO;
+use App\DTO\RegistrationFarmDTO;
+use App\Entity\Producer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class RegistrationType extends AbstractType
@@ -29,24 +31,26 @@ class RegistrationType extends AbstractType
             ->add('plainPassword', PasswordType::class, [
                 'label' => 'Mot de passe'
             ])
-            ->add('save', SubmitType::class, [
-                'label' => "Valider"
-            ])
+            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+                $user = $event->getData()->getUser();
+
+                if (!$user instanceof Producer) {
+                    return;
+                }
+
+                $data = new RegistrationFarmDTO();
+                $data->setUserFarm($user->getFarm());
+
+                $event->getForm()->add("farm", FarmType::class, [
+                    'label' => false,
+                    'data' => $data,
+                ]);
+            })
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'data_class' => RegistrationDTO::class,
-            'empty_data' => function (FormInterface $form) {
-                return new RegistrationDTO(
-                    $form->get('email')->getData(),
-                    $form->get('firstName')->getData(),
-                    $form->get('lastName')->getData(),
-                    $form->get('plainPassword')->getData()
-                );
-            }
-        ]);
+        $resolver->setDefault("data_class", RegistrationDTO::class);
     }
 }

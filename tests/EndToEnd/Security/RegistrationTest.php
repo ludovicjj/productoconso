@@ -49,38 +49,15 @@ class RegistrationTest extends WebTestCase
         $this->assertContains("ROLE_" . strtoupper($role), $user->getRoles());
     }
 
-    public function testRegistrationWithEmptyFormData(): void
-    {
-        /** @var RouterInterface $router */
-        $router = $this->client->getContainer()->get('router');
-
-        /** @var Crawler $crawler */
-        $crawler = $this->client->request(
-            Request::METHOD_GET,
-            $router->generate('security_registration', [
-                'role' => 'customer'
-            ])
-        );
-        $form = $crawler->filter("form[name=registration]")->form();
-        $crawler = $this->client->submit($form);
-
-        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
-        $this->assertCount(4, $crawler->filter('ul li'));
-        $nodes = $crawler->filter('ul li')->getIterator();
-        foreach ($nodes as $node) {
-            $this->assertEquals("Ce champs est obligatoire.", $node->textContent);
-        }
-    }
-
     /**
      * @param string $role
      * @param array $formData
-     * @dataProvider providerExistingEmail
+     * @param string $errorMessage
+     * @dataProvider providerFail
      */
-    public function testRegistrationWithExistingEmail(string $role, array $formData)
+    public function testRegistrationFail(string $role, array $formData, string $errorMessage): void
     {
-        $this->loadFixture(__DIR__ . "/../../fixtures/ReadUser.yml");
-
+        $this->loadFixture(__DIR__ . '/../../fixtures/RegistrationUser.yml');
         /** @var RouterInterface $router */
         $router = $this->client->getContainer()->get('router');
 
@@ -93,45 +70,10 @@ class RegistrationTest extends WebTestCase
         );
 
         $form = $crawler->filter("form[name=registration]")->form($formData);
-        $crawler = $this->client->submit($form);
+        $this->client->submit($form);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
-        $this->assertCount(1, $crawler->filter('ul li'));
-
-        $this->assertSelectorTextContains(
-            'html ul li',
-            "Cette adresse email est déjà utilisé."
-        );
-    }
-
-    /**
-     * @param string $role
-     * @param array $formData
-     * @dataProvider providerInvalidFormatEmail
-     */
-    public function testRegistrationWithInvalidFormatEmail(string $role, array $formData)
-    {
-        /** @var RouterInterface $router */
-        $router = $this->client->getContainer()->get('router');
-
-        /** @var Crawler $crawler */
-        $crawler = $this->client->request(
-            Request::METHOD_GET,
-            $router->generate('security_registration', [
-                'role' => $role
-            ])
-        );
-
-        $form = $crawler->filter("form[name=registration]")->form($formData);
-        $crawler = $this->client->submit($form);
-
-        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
-        $this->assertCount(1, $crawler->filter('ul li'));
-
-        $this->assertSelectorTextContains(
-            'html ul li',
-            "Le format de l'adresse email est invalide."
-        );
+        $this->assertSelectorTextContains('html ul li', $errorMessage);
     }
 
     /**
@@ -156,6 +98,17 @@ class RegistrationTest extends WebTestCase
                     "registration[firstName]" => "John",
                     "registration[lastName]" => "Doe",
                     "registration[plainPassword]" => "123456",
+                    "registration[farm][name]" => "my company"
+                ]
+            ],
+            [
+                "producer",
+                [
+                    "registration[email]" => "producer2@email.fr",
+                    "registration[firstName]" => "First",
+                    "registration[lastName]" => "Last",
+                    "registration[plainPassword]" => "123456",
+                    "registration[farm][name]" => "my second company"
                 ]
             ]
         ];
@@ -164,9 +117,59 @@ class RegistrationTest extends WebTestCase
     /**
      * @return array
      */
-    public function providerExistingEmail(): array
+    public function providerFail(): array
     {
         return [
+            [
+                "customer",
+                [
+                    "registration[email]" => "",
+                    "registration[firstName]" => "John",
+                    "registration[lastName]" => "Doe",
+                    "registration[plainPassword]" => "123456",
+                ],
+                "Ce champs est obligatoire."
+            ],
+            [
+                "customer",
+                [
+                    "registration[email]" => "test@gmail.com",
+                    "registration[firstName]" => "",
+                    "registration[lastName]" => "Doe",
+                    "registration[plainPassword]" => "123456",
+                ],
+                "Ce champs est obligatoire."
+            ],
+            [
+                "customer",
+                [
+                    "registration[email]" => "test@gmail.com",
+                    "registration[firstName]" => "John",
+                    "registration[lastName]" => "",
+                    "registration[plainPassword]" => "123456",
+                ],
+                "Ce champs est obligatoire."
+            ],
+            [
+                "customer",
+                [
+                    "registration[email]" => "test@gmail.com",
+                    "registration[firstName]" => "John",
+                    "registration[lastName]" => "Doe",
+                    "registration[plainPassword]" => "",
+                ],
+                "Ce champs est obligatoire."
+            ],
+            [
+                "customer",
+                [
+                    "registration[email]" => "test@gmail",
+                    "registration[firstName]" => "John",
+                    "registration[lastName]" => "Doe",
+                    "registration[plainPassword]" => "123456",
+                ],
+                "Le format de l'adresse email est invalide."
+            ],
             [
                 "customer",
                 [
@@ -174,44 +177,20 @@ class RegistrationTest extends WebTestCase
                     "registration[firstName]" => "John",
                     "registration[lastName]" => "Doe",
                     "registration[plainPassword]" => "123456",
-                ]
+                ],
+                "Cette adresse email est déjà utilisé."
             ],
             [
                 "producer",
                 [
-                    "registration[email]" => "producer@email.fr",
+                    "registration[email]" => "test@email.fr",
                     "registration[firstName]" => "John",
                     "registration[lastName]" => "Doe",
                     "registration[plainPassword]" => "123456",
-                ]
-            ]
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function providerInvalidFormatEmail(): array
-    {
-        return [
-            [
-                "customer",
-                [
-                    "registration[email]" => "customeremail.fr",
-                    "registration[firstName]" => "John",
-                    "registration[lastName]" => "Doe",
-                    "registration[plainPassword]" => "123456",
-                ]
+                    "registration[farm][name]" => ""
+                ],
+                "Ce champs est obligatoire."
             ],
-            [
-                "producer",
-                [
-                    "registration[email]" => "producer@email",
-                    "registration[firstName]" => "John",
-                    "registration[lastName]" => "Doe",
-                    "registration[plainPassword]" => "123456",
-                ]
-            ]
         ];
     }
 }

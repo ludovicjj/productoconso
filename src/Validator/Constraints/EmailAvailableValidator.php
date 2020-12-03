@@ -40,7 +40,7 @@ class EmailAvailableValidator extends ConstraintValidator
 
     private function isValidEmail(RegistrationDTO $DTO): bool
     {
-        $user = $this->userRepository->findOneBy(['email' => $DTO->email]);
+        $user = $this->userRepository->findOneBy(['email' => $DTO->getEmail()]);
 
         return is_null($user);
     }
