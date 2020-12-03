@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\DTO\RegistrationDTO;
 use App\Entity\Customer;
 use App\Entity\Producer;
 use App\Handler\ForgottenPasswordHandler;
@@ -108,8 +109,10 @@ class SecurityController
 
         /** @var RegistrationHandler $handler */
         $handler = $this->handlerFactory->createHandler(RegistrationHandler::class);
+        $data = new RegistrationDTO();
+        $data->setUser($user);
 
-        if ($handler->handle($request, $user)) {
+        if ($handler->handle($request, $user, $data)) {
             return new RedirectResponse($this->urlGenerator->generate("home"));
         }
 
