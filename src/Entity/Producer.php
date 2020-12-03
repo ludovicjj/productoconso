@@ -29,7 +29,7 @@ class Producer extends User
     {
         return ['ROLE_PRODUCER'];
     }
-    
+
     public function getFarm(): Farm
     {
         return $this->farm;
