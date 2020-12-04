@@ -3,7 +3,6 @@
 namespace App\Form;
 
 use App\DTO\RegistrationDTO;
-use App\DTO\RegistrationFarmDTO;
 use App\Entity\Producer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -38,12 +37,8 @@ class RegistrationType extends AbstractType
                     return;
                 }
 
-                $data = new RegistrationFarmDTO();
-                $data->setUserFarm($user->getFarm());
-
                 $event->getForm()->add("farm", FarmType::class, [
-                    'label' => false,
-                    'data' => $data,
+                    'label' => false
                 ]);
             })
         ;

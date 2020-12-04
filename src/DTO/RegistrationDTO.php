@@ -54,7 +54,7 @@ class RegistrationDTO
     private $plainPassword;
 
     /**
-     * @var RegistrationFarmDTO|null $farm
+     * @var FarmDTO|null $farm
      * @Assert\Valid()
      */
     private $farm;
@@ -112,12 +112,12 @@ class RegistrationDTO
         $this->user = $user;
     }
 
-    public function setFarm(RegistrationFarmDTO $farm): void
+    public function setFarm(FarmDTO $farm): void
     {
         $this->farm = $farm;
     }
 
-    public function getFarm(): ?RegistrationFarmDTO
+    public function getFarm(): ?FarmDTO
     {
         return $this->farm;
     }
