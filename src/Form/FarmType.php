@@ -2,9 +2,9 @@
 
 namespace App\Form;
 
-use App\DTO\RegistrationFarmDTO;
-use App\Entity\Farm;
+use App\DTO\FarmDTO;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -20,16 +20,23 @@ class FarmType extends AbstractType
                 "label" => "Nom de votre exploitation"
             ])
             ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+                $form = $event->getForm();
                 $data = $event->getData();
-
-                /** @var Farm $farm */
-                $farm = $data->getUserFarm();
+                if ($data !== null && $data->getUserFarm()->getId() !== null) {
+                    $form
+                        ->add("adresse", AdresseType::class, [
+                            "label" => false
+                        ])
+                        ->add("description", TextareaType::class, [
+                            "label" => "Présentation de votre exploitation"
+                        ]);
+                }
             })
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefault("data_class", RegistrationFarmDTO::class);
+        $resolver->setDefault("data_class", FarmDTO::class);
     }
 }
