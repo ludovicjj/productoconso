@@ -60,9 +60,9 @@ class Adresse
     }
 
     /**
-     * @param string $restAdresse
+     * @param string|null $restAdresse
      */
-    public function setRestAdresse(string $restAdresse): void
+    public function setRestAdresse(?string $restAdresse): void
     {
         $this->restAdresse = $restAdresse;
     }
