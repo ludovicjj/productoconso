@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\DTO;
 
 use Symfony\Component\Validator\Constraints as Assert;
@@ -67,7 +66,7 @@ class AdresseDTO
     {
         return $this->restAdresse;
     }
-    
+
     public function setZipCode(?string $zipCode): void
     {
         $this->zipCode = $zipCode;
