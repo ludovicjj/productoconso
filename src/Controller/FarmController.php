@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\DTO\FarmDTO;
-use App\Entity\Farm;
 use App\Entity\Producer;
 use App\Handler\UpdateFarmHandler;
 use App\HandlerFactory\HandlerFactory;
