@@ -6,9 +6,11 @@ use App\DTO\FarmDTO;
 use App\Entity\Producer;
 use App\Handler\UpdateFarmHandler;
 use App\HandlerFactory\HandlerFactory;
+use App\Repository\FarmRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -36,16 +38,21 @@ class FarmController
     /** @var UrlGeneratorInterface $urlGenerator */
     private $urlGenerator;
 
+    /** @var FarmRepository $farmRepository */
+    private $farmRepository;
+
     public function __construct(
         Security $security,
         Environment $twig,
         HandlerFactory $handlerFactory,
-        UrlGeneratorInterface $urlGenerator
+        UrlGeneratorInterface $urlGenerator,
+        FarmRepository $farmRepository
     ) {
         $this->security = $security;
         $this->twig = $twig;
         $this->handlerFactory = $handlerFactory;
         $this->urlGenerator = $urlGenerator;
+        $this->farmRepository = $farmRepository;
     }
 
     /**
@@ -80,6 +87,33 @@ class FarmController
         return new Response(
             $this->twig->render("ui/farm/update_farm.html.twig", [
                 'form' => $handler->createView()
+            ])
+        );
+    }
+
+    /**
+     * @Route("/{slug}/show", name="farm_show")
+     * @param Request $request
+     * @return Response
+     *
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function show(Request $request): Response
+    {
+        $slug = $request->attributes->get("slug");
+
+        $farm = $this->farmRepository->findOneBy(['slug' => $slug]);
+
+        if (null === $farm) {
+            $message = "Oops, il semblerait qu'aucun résultat n'est été trouvé pour cette requête";
+            throw new NotFoundHttpException($message);
+        }
+
+        return new Response(
+            $this->twig->render("ui/farm/show_farm.html.twig", [
+                "farm" => $farm,
             ])
         );
     }
