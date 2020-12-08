@@ -32,3 +32,8 @@ services:
         resource: '../src/Handler/'
         shared: false
         tags: ['app.handler']
+
+    # Listener
+    App\Listener\ExceptionListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
