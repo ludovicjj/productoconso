@@ -39,4 +39,16 @@ class FarmRepository extends ServiceEntityRepository
 
         return sprintf("%s-%d", $slug, $result[0] + 1);
     }
+
+    /**
+     * Order farm by slug asc, need update..
+     * @return int|mixed|string
+     */
+    public function searchFarm()
+    {
+        return $this->createQueryBuilder("f")
+            ->orderBy("f.slug", "ASC")
+            ->getQuery()
+            ->getResult();
+    }
 }
