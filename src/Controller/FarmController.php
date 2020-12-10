@@ -2,11 +2,13 @@
 
 namespace App\Controller;
 
+use App\Core\ParameterBagTransformer;
 use App\DTO\FarmDTO;
 use App\Entity\Producer;
 use App\Handler\UpdateFarmHandler;
 use App\HandlerFactory\HandlerFactory;
 use App\Repository\FarmRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Serializer\SerializerInterface;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -41,18 +44,28 @@ class FarmController
     /** @var FarmRepository $farmRepository */
     private $farmRepository;
 
+    /** @var SerializerInterface $serializer */
+    private $serializer;
+
+    /** @var ParameterBagTransformer $parameterBagTransformer */
+    private $parameterBagTransformer;
+
     public function __construct(
         Security $security,
         Environment $twig,
         HandlerFactory $handlerFactory,
         UrlGeneratorInterface $urlGenerator,
-        FarmRepository $farmRepository
+        FarmRepository $farmRepository,
+        SerializerInterface $serializer,
+        ParameterBagTransformer $parameterBagTransformer
     ) {
         $this->security = $security;
         $this->twig = $twig;
         $this->handlerFactory = $handlerFactory;
         $this->urlGenerator = $urlGenerator;
         $this->farmRepository = $farmRepository;
+        $this->serializer = $serializer;
+        $this->parameterBagTransformer = $parameterBagTransformer;
     }
 
     /**
@@ -116,5 +129,18 @@ class FarmController
                 "farm" => $farm,
             ])
         );
+    }
+
+    /**
+     * @Route("/all", name="farm_all")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function all(Request $request): JsonResponse
+    {
+        $context = $this->parameterBagTransformer->transformQueryToContext($request->query);
+        $json = $this->serializer->serialize($this->farmRepository->findAll(), "json", $context);
+
+        return new JsonResponse($json, JsonResponse::HTTP_OK, [], true);
     }
 }
