@@ -1,20 +1,23 @@
 <?php
 
-
 namespace App\Serializer;
 
 use App\Entity\Adresse;
 use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
+/**
+ * Class AdresseNormalizer
+ * @package App\Serializer
+ */
 class AdresseNormalizer implements ContextAwareNormalizerInterface
 {
     /** @var ObjectNormalizer $objectNormalizer */
     private $objectNormalizer;
 
-    const OBJECT_TYPE = 'adresse';
+    public const OBJECT_TYPE = 'adresse';
 
-    const ALLOWED_PUBLIC_ATTRIBUTES = [
+    public const ALLOWED_PUBLIC_ATTRIBUTES = [
         'adresse',
         'zipCode',
         'city'

@@ -18,15 +18,15 @@ class FarmNormalizer implements ContextAwareNormalizerInterface
 
     private $includeNormalizer;
 
-    const OBJECT_TYPE = 'farm';
+    public const OBJECT_TYPE = 'farm';
 
-    const ALLOWED_PUBLIC_ATTRIBUTES = [
+    public const ALLOWED_PUBLIC_ATTRIBUTES = [
         'id',
         'name',
         'slug'
     ];
 
-    const ALLOWED_INCLUDES = [
+    public const ALLOWED_INCLUDES = [
         'adresse',
     ];
 
