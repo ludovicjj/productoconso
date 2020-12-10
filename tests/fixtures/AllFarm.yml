@@ -1,0 +1,43 @@
+App\Entity\Adresse:
+  adresse:
+    city: "paris"
+    zipCode: "75001"
+    adresse: "5 rue de la paix"
+
+App\Entity\Farm:
+  farm1:
+    name: "my company"
+    slug: "my-company"
+    adresse: "@adresse"
+
+  farm2:
+    name: "my company 2"
+    slug: "my-company-2"
+    adresse: "@adresse"
+
+  farm3:
+    name: "my company 3"
+    slug: "my-company-3"
+    adresse: "@adresse"
+
+App\Entity\Producer:
+  producer1:
+    firstName: "john"
+    lastName: "doe"
+    email: "producer1@email.fr"
+    password: "\\$2y\\$10\\$OdX90bl.mvnRz.LA9Q4e.unpRgcZLizaAybzCY7DFQscDJ1DWo4R2" # bcrypt('123456')
+    farm: "@farm1"
+
+  producer2:
+    firstName: "john"
+    lastName: "doe"
+    email: "producer2@email.fr"
+    password: "\\$2y\\$10\\$OdX90bl.mvnRz.LA9Q4e.unpRgcZLizaAybzCY7DFQscDJ1DWo4R2" # bcrypt('123456')
+    farm: "@farm2"
+
+  producer3:
+    firstName: "john"
+    lastName: "doe"
+    email: "producer3@email.fr"
+    password: "\\$2y\\$10\\$OdX90bl.mvnRz.LA9Q4e.unpRgcZLizaAybzCY7DFQscDJ1DWo4R2" # bcrypt('123456')
+    farm: "@farm3"

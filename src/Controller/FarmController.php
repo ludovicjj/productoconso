@@ -139,7 +139,7 @@ class FarmController
     public function all(Request $request): JsonResponse
     {
         $context = $this->parameterBagTransformer->transformQueryToContext($request->query);
-        $json = $this->serializer->serialize($this->farmRepository->findAll(), "json", $context);
+        $json = $this->serializer->serialize($this->farmRepository->searchFarm(), "json", $context);
 
         return new JsonResponse($json, JsonResponse::HTTP_OK, [], true);
     }
