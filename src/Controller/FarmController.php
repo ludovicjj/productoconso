@@ -8,6 +8,7 @@ use App\Entity\Producer;
 use App\Handler\UpdateFarmHandler;
 use App\HandlerFactory\HandlerFactory;
 use App\Repository\FarmRepository;
+use App\Request\Farm\SearchFarm\RequestLoader;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -47,8 +48,8 @@ class FarmController
     /** @var SerializerInterface $serializer */
     private $serializer;
 
-    /** @var ParameterBagTransformer $parameterBagTransformer */
-    private $parameterBagTransformer;
+    /** @var RequestLoader $requestLoader */
+    private $requestLoader;
 
     public function __construct(
         Security $security,
@@ -57,7 +58,7 @@ class FarmController
         UrlGeneratorInterface $urlGenerator,
         FarmRepository $farmRepository,
         SerializerInterface $serializer,
-        ParameterBagTransformer $parameterBagTransformer
+        RequestLoader $requestLoader
     ) {
         $this->security = $security;
         $this->twig = $twig;
@@ -65,7 +66,7 @@ class FarmController
         $this->urlGenerator = $urlGenerator;
         $this->farmRepository = $farmRepository;
         $this->serializer = $serializer;
-        $this->parameterBagTransformer = $parameterBagTransformer;
+        $this->requestLoader = $requestLoader;
     }
 
     /**
@@ -132,15 +133,16 @@ class FarmController
     }
 
     /**
-     * @Route("/all", name="farm_all")
+     * @Route("/search", name="farm_search")
      * @param Request $request
      * @return JsonResponse
      */
-    public function all(Request $request): JsonResponse
+    public function search(Request $request): JsonResponse
     {
-        $context = $this->parameterBagTransformer->transformQueryToContext($request->query);
-        $json = $this->serializer->serialize($this->farmRepository->searchFarm(), "json", $context);
+        $output = $this->requestLoader->load($request);
+        $context = ParameterBagTransformer::transformQueryToContext($request->query);
+        $json = $this->serializer->serialize($output, 'json', $context);
 
-        return new JsonResponse($json, JsonResponse::HTTP_OK, [], true);
+        return new JsonResponse($json, Response::HTTP_OK, [], true);
     }
 }

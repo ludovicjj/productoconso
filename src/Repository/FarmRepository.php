@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Farm;
+use App\Search\FarmSearch;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -40,14 +41,13 @@ class FarmRepository extends ServiceEntityRepository
         return sprintf("%s-%d", $slug, $result[0] + 1);
     }
 
-    /**
-     * Order farm by slug asc, need update..
-     * @return int|mixed|string
-     */
-    public function searchFarm()
+    public function search(FarmSearch $farmSearch)
     {
-        return $this->createQueryBuilder("f")
-            ->orderBy("f.slug", "ASC")
+        $queryBuilder =  $this->createQueryBuilder("farm");
+        foreach ($farmSearch->getOrders() as $order) {
+            $queryBuilder->addOrderBy("farm.{$order->getOrder()}", $order->getDirection());
+        }
+        return $queryBuilder
             ->getQuery()
             ->getResult();
     }

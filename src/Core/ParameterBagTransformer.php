@@ -14,11 +14,11 @@ class ParameterBagTransformer
      * @param ParameterBag $parameterBag
      * @return array
      */
-    public function transformQueryToContext(ParameterBag $parameterBag): array
+    public static function transformQueryToContext(ParameterBag $parameterBag): array
     {
         $query = [
-            'fields' => $this->getFields($parameterBag),
-            'includes' => $this->getIncludes($parameterBag)
+            'fields' => self::getFields($parameterBag),
+            'includes' => self::getIncludes($parameterBag)
         ];
 
         return ['query' => $query];
@@ -28,7 +28,7 @@ class ParameterBagTransformer
      * @param ParameterBag $parameterBag
      * @return array
      */
-    private function getFields(ParameterBag $parameterBag): array
+    private static function getFields(ParameterBag $parameterBag): array
     {
         if (!$parameterBag->has('fields')) {
             return [];
@@ -43,7 +43,7 @@ class ParameterBagTransformer
      * @param ParameterBag $parameterBag
      * @return array
      */
-    private function getIncludes(ParameterBag $parameterBag): array
+    private static function getIncludes(ParameterBag $parameterBag): array
     {
         if (!$parameterBag->has('includes')) {
             return [];
