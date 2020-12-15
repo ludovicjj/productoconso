@@ -1,5 +1,35 @@
+App\Entity\Farm:
+  farm1:
+    name: "my company"
+    slug: "my-company"
+
+App\Entity\Price:
+  price1:
+    unitPrice: 15
+    vat: 5.5
+  price2:
+    unitPrice: 8
+    vat: 5.5
+
+App\Entity\Producer:
+  producer1:
+    firstName: "john"
+    lastName: "doe"
+    email: "producer@email.fr"
+    password: "\\$2y\\$10\\$OdX90bl.mvnRz.LA9Q4e.unpRgcZLizaAybzCY7DFQscDJ1DWo4R2" # bcrypt('123456')
+    farm: "@farm1"
+
 App\Entity\Product:
   product1:
-    name: "my first product"
+    name: "product name"
+    description: "product description"
+    quantity: 5
+    farm: "@farm1"
+    price: "@price1"
+
   product2:
-    name: "my second product"
+    name: "product name"
+    description: "product description"
+    quantity: 1
+    farm: "@farm1"
+    price: "@price2"
