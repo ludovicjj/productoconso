@@ -31,7 +31,7 @@ class Product
     /**
      * @ORM\Column(type="text")
      */
-    private $description= "";
+    private $description = "";
 
     /**
      * @ORM\Column(type="integer")
