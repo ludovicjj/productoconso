@@ -19,7 +19,7 @@ class PriceDTO
      * )
      * @Assert\GreaterThan(
      *     value = 0,
-     *     message = "Vous devez choissir un prix unitaire supérieure à zero."
+     *     message = "Vous devez choisir un prix unitaire supérieure à zero."
      * )
      */
     private $unitPrice;
@@ -29,7 +29,6 @@ class PriceDTO
      * @Assert\NotBlank(
      *     message = "Ce champs est obligatoire."
      * )
-     * @Assert\Choice(choices=PriceDTO::VAT, message="Veuillez choissir un TVA valide.")
      */
     private $vat;
 
