@@ -50,7 +50,7 @@ class Price
     /**
      * @param int|float $vat
      */
-    public function setVat(int $vat): void
+    public function setVat($vat): void
     {
         $this->vat = $vat;
     }
