@@ -27,6 +27,7 @@ class PriceType extends AbstractType
             ])
             ->add("vat", ChoiceType::class, [
                 "label" => "TVA",
+                "invalid_message" => "La TVA saisi n'est pas valide.",
                 "choices" => [
                     "2,1%" => 2.1,
                     "5,5%" => 5.5,

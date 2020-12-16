@@ -31,6 +31,16 @@ trait EndToEndIntegrationTestTrait
         $purger->purge();
     }
 
+    public function clearUploadedImage()
+    {
+        $files = glob(__DIR__ . '/../../public/uploads/' . '*.png');
+        foreach ($files as $file) { // iterate files
+            if (is_file($file) && basename($file) !== 'image.png') {
+                unlink($file); // delete file
+            }
+        }
+    }
+
     /**
      * @param string $email
      */
