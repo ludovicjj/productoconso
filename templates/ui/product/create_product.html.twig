@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Create product</h1>
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    <div>
+        {{ form_label(form.name) }}
+        {{ form_errors(form.name) }}
+        {{ form_widget(form.name) }}
+    </div>
+    <div>
+        {{ form_label(form.description) }}
+        {{ form_errors(form.description) }}
+        {{ form_widget(form.description) }}
+    </div>
+    <div>
+        {{ form_label(form.price.unitPrice) }}
+        {{ form_help(form.price.unitPrice) }}
+        {{ form_errors(form.price.unitPrice) }}
+        {{ form_widget(form.price.unitPrice) }}
+    </div>
+    <div>
+        {{ form_label(form.price.vat) }}
+        {{ form_errors(form.price.vat) }}
+        {{ form_widget(form.price.vat) }}
+    </div>
+    <div>
+        {{ form_label(form.image.file) }}
+        {{ form_help(form.image.file) }}
+        {{ form_errors(form.image.file) }}
+        {{ form_widget(form.image.file) }}
+    </div>
+    {{ form_rest(form) }}
+    <button type="submit">Valider</button>
+    {{ form_end(form) }}
+{% endblock %}
