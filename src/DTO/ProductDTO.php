@@ -51,9 +51,19 @@ class ProductDTO
         return $this->name;
     }
 
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
     public function getDescription(): string
     {
         return $this->description;
+    }
+
+    public function setDescription(string $description): void
+    {
+        $this->description = $description;
     }
 
     public function getPrice(): PriceDTO
@@ -61,8 +71,18 @@ class ProductDTO
         return $this->price;
     }
 
+    public function setPrice(PriceDTO $price): void
+    {
+        $this->price = $price;
+    }
+
     public function getImage()
     {
         return $this->image;
+    }
+
+    public function setImage(ImageDTO $image): void
+    {
+        $this->image = $image;
     }
 }
