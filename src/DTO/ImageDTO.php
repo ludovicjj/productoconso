@@ -30,4 +30,9 @@ class ImageDTO
     {
         return $this->file;
     }
+
+    public function setFile(?UploadedFile $file): void
+    {
+        $this->file = $file;
+    }
 }
