@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\Product;
+use App\Factory\ProductDTOFactory;
 use App\Handler\CreateProductHandler;
+use App\Handler\UpdateProductHandler;
 use App\HandlerFactory\HandlerFactory;
+use App\Request\Product\UpdateProduct\RequestHandler;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,16 +37,21 @@ class ProductController
     /** @var UrlGeneratorInterface $urlGenerator */
     private $urlGenerator;
 
+    /** @var RequestHandler $requestHandler */
+    private $requestHandler;
+
     public function __construct(
         HandlerFactory $handlerFactory,
         Environment $twig,
         Security $security,
-        UrlGeneratorInterface $urlGenerator
+        UrlGeneratorInterface $urlGenerator,
+        RequestHandler $requestHandler
     ) {
         $this->handlerFactory = $handlerFactory;
         $this->twig = $twig;
         $this->security = $security;
         $this->urlGenerator = $urlGenerator;
+        $this->requestHandler = $requestHandler;
     }
 
     /**
@@ -79,9 +86,8 @@ class ProductController
 
         /** @var CreateProductHandler $handler */
         $handler = $this->handlerFactory->createHandler(CreateProductHandler::class);
-        $product = new Product();
 
-        if ($handler->handle($request, $product)) {
+        if ($handler->handle($request)) {
             return new RedirectResponse(
                 $this->urlGenerator->generate("product_index")
             );
@@ -89,6 +95,36 @@ class ProductController
 
         return new Response(
             $this->twig->render("ui/product/create_product.html.twig", [
+                "form" => $handler->createView()
+            ])
+        );
+    }
+
+    /**
+     * @Route("/product/update/{id}", name="product_update")
+     * @param Request $request
+     * @return Response
+     *
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function update(Request $request): Response
+    {
+        $product = $this->requestHandler->handle($request);
+        $productDTO = ProductDTOFactory::create($product);
+
+        /** @var UpdateProductHandler $handler */
+        $handler = $this->handlerFactory->createHandler(UpdateProductHandler::class);
+
+        if ($handler->handle($request, $product, $productDTO)) {
+            return new RedirectResponse(
+                $this->urlGenerator->generate("product_index")
+            );
+        }
+
+        return new Response(
+            $this->twig->render("ui/product/update_product.html.twig", [
                 "form" => $handler->createView()
             ])
         );
