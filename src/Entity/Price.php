@@ -42,7 +42,7 @@ class Price
     /**
      * @return int|float
      */
-    public function getVat(): int
+    public function getVat()
     {
         return $this->vat;
     }
