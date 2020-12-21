@@ -13,7 +13,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
  */
 class ProductVoter extends Voter
 {
-    const UPDATE = "update";
+    public const UPDATE = "update";
 
     protected function supports(string $attribute, $subject)
     {

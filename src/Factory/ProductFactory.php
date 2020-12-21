@@ -55,7 +55,7 @@ class ProductFactory
             $product->getImage()->getPath()
         );
 
-        if ($image ==! null) {
+        if ($image !== null) {
             $product->setImage($image);
         }
     }
