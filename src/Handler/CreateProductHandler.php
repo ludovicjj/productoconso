@@ -2,12 +2,8 @@
 
 namespace App\Handler;
 
-use App\Core\ImageBuilder;
-use App\DTO\ProductDTO;
-use App\Entity\Image;
-use App\Entity\Price;
 use App\Entity\Producer;
-use App\Entity\Product;
+use App\Factory\ProductFactory;
 use App\Form\ProductType;
 use App\HandlerFactory\AbstractHandler;
 use Doctrine\ORM\EntityManagerInterface;
@@ -35,51 +31,33 @@ class CreateProductHandler extends AbstractHandler
     /** @var SessionInterface $session */
     private $session;
 
-    /** @var ImageBuilder $imageBuilder */
-    private $imageBuilder;
+    /** @var ProductFactory $productFactory */
+    private $productFactory;
 
     public function __construct(
         FormFactoryInterface $formFactory,
         EntityManagerInterface $entityManager,
         Security $security,
         SessionInterface $session,
-        ImageBuilder $imageBuilder
+        ProductFactory $productFactory
     ) {
         $this->formFactory = $formFactory;
         $this->entityManager = $entityManager;
         $this->security = $security;
         $this->session = $session;
-        $this->imageBuilder = $imageBuilder;
+        $this->productFactory = $productFactory;
     }
 
     public function process(FormInterface $form): void
     {
-        /** @var Product $product */
-        $product = $this->getEntity();
-
-        /** @var ProductDTO $productDTO */
-        $productDTO = $form->getData();
-
         /** @var Producer $producer */
         $producer = $this->security->getUser();
 
-        $price = new Price();
-        $price->setUnitPrice($productDTO->getPrice()->getUnitPrice());
-        $price->setVat($productDTO->getPrice()->getVat());
-
-        /** @var Image|null $image */
-        $image = $this->imageBuilder->build($productDTO->getImage()->getFile());
-
-        $product->setName($productDTO->getName());
-        $product->setDescription($productDTO->getDescription());
-        $product->setPrice($price);
-        $product->setFarm($producer->getFarm());
-        $product->setImage($image);
-
+        $product = $this->productFactory->create($producer, $form->getData());
         $this->entityManager->persist($product);
         $this->entityManager->flush();
 
-        $this->session->getFlashBag()->add("success", "Votre produit a bien été créer.");
+        $this->session->getFlashBag()->add("success", "Votre produit a été créé avec succès.");
     }
 
     protected function configure(OptionsResolver $resolver): void
