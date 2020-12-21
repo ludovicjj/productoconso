@@ -26,10 +26,20 @@ class ImageBuilder
         $this->uploadDir = $uploadDir;
     }
 
-    public function build(?UploadedFile $file): ?Image
+    /**
+     * @param UploadedFile|null $file
+     * @param null $oldFile
+     * @return Image|null
+     */
+    public function build(?UploadedFile $file, $oldFile = null): ?Image
     {
         if ($file === null) {
             return null;
+        }
+
+        if ($oldFile) {
+            $oldFilename = str_replace('uploads/', '', $oldFile);
+            unlink($this->uploadAbsoluteDir . $oldFilename);
         }
 
         $filename = Uuid::v4() . '.' . $file->getClientOriginalExtension();
